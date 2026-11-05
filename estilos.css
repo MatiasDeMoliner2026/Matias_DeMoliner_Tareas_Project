@@ -1,0 +1,43 @@
+@charset "utf-8";
+:root {
+  --fondo: #f6f6f4;
+  --blanco: #ffffff;
+  --texto: #2b2f2d;
+  --gris: #6b716e;
+  --linea: #dcdedb;
+  --acento: #4a6b5d;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--fondo); color: var(--texto); font-family: Arial, Helvetica, sans-serif; line-height: 1.6; padding: 0 16px; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--acento); }
+.wrap { max-width: 800px; margin: 0 auto; }
+header { padding: 36px 0 20px; border-bottom: 1px solid var(--linea); }
+h1 { font-size: clamp(1.6rem, 5vw, 2.1rem); line-height: 1.2; margin: 0 0 10px; }
+.lead { color: var(--gris); margin: 0 0 12px; }
+.meta { font-size: .88rem; color: var(--gris); }
+nav { padding: 14px 0; border-bottom: 1px solid var(--linea); }
+nav a { margin-right: 14px; font-size: .92rem; text-decoration: none; }
+nav a:hover { text-decoration: underline; }
+section { padding: 24px 0 6px; border-bottom: 1px solid var(--linea); }
+h2 { font-size: 1.4rem; margin: 0 0 6px; }
+h3 { font-size: 1.05rem; margin: 18px 0 4px; }
+p { margin: 8px 0; }
+ul { padding-left: 1.2rem; }
+code { font-family: Consolas, "Courier New", monospace; font-size: .9em; background: #ececea; padding: 1px 5px; border-radius: 3px; }
+pre { background: #2b2f2d; color: #e8ebe9; border-radius: 4px; padding: 14px 16px; overflow-x: auto; font-family: Consolas, "Courier New", monospace; font-size: .85rem; line-height: 1.5; margin: 10px 0; }
+pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+
+.img-espacio { aspect-ratio: 16 / 9; border: 1px dashed #b5b9b6; border-radius: 4px; background: #efefed; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 12px; color: var(--gris); margin: 16px 0 4px; }
+.img-espacio small { font-size: .78rem; }
+.img-espacio.ancha { aspect-ratio: 21 / 8; }
+figcaption { font-size: .85rem; color: var(--gris); margin-bottom: 12px; }
+figure { margin: 0; }
+
+.table-scroll { overflow-x: auto; margin: 12px 0; border: 1px solid var(--linea); border-radius: 4px; background: var(--blanco); }
+table { border-collapse: collapse; width: 100%; min-width: 480px; font-size: .92rem; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--linea); }
+th { background: #eeeeec; }
+tr:last-child td { border-bottom: none; }
+footer { padding: 18px 0 36px; color: var(--gris); font-size: .88rem; }

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="estilos.css">
+<title>Informe | Agencia de representación de jugadores</title>
+<style>
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Página web para una agencia de representación de jugadores</h1>
+  <p class="lead">Informe sobre las tecnologías que se usarán: HTML, CSS, PHP, MySQL y phpMyAdmin.</p>
+  <p class="meta">Hecho por: Matias De Moliner</p>
+
+    <img src="img/cmVyYS53ZWJw" alt="Banner">
+</header>
+
+<nav>
+  <a href="#intro">Introducción</a>
+  <a href="#html">HTML</a>
+  <a href="#css">CSS</a>
+  <a href="#mysql">MySQL</a>
+  <a href="#phpmyadmin">phpMyAdmin</a>
+  <a href="#php">PHP</a>
+  <a href="#login">Login</a>
+  <a href="#crud">CRUD</a>
+</nav>
+
+<section id="intro">
+  <h2>Introducción</h2>
+  <p>Una agencia de representación de jugadores gestiona la carrera de futbolistas: negocia contratos, maneja transferencias y mantiene la relación con los clubes. Eso genera datos que cambian seguido, como fechas de vencimiento de contratos, cláusulas de rescisión, valores de mercado y comisiones.</p>
+  <p>El sitio tendrá una parte pública, que presenta a la agencia y a sus jugadores, y una parte privada para que el equipo cargue y consulte los datos. La parte privada se apoya en dos funciones centrales: un sistema de login, para que solo entre personal autorizado, y un CRUD de jugadores, para crear, ver, editar y eliminar registros.</p>
+  <h3>Problema que resuelve</h3>
+  <p>Muchas agencias llevan la información de sus jugadores en planillas sueltas, mensajes y papeles. Eso hace difícil saber a tiempo qué contratos están por vencer, quién representa a cada jugador o cuánto se cobra de comisión. Un sistema web centraliza todo en un solo lugar, ordenado y accesible desde cualquier dispositivo.</p>
+ 
+  <h3>Objetivos</h3>
+  <ul>
+    <li>Presentar a la agencia y a sus jugadores en una página pública.</li>
+    <li>Proteger la información interna con un sistema de login.</li>
+    <li>Permitir cargar, consultar, modificar y eliminar datos con un CRUD.</li>
+    <li>Guardar todo en una base de datos MySQL administrada con phpMyAdmin.</li>
+  </ul>
+  <h3>Usuarios del sistema</h3>
+  <ul>
+    <li><strong>Visitantes:</strong> clubes, familias y jugadores interesados que ven la parte pública.</li>
+    <li><strong>Representantes:</strong> el personal de la agencia, que inicia sesión y gestiona los datos.</li>
+  </ul>
+ 
+
+  <img src="img/NTkud2VicA" alt="Jugador y su rte.">
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Tecnología</th><th>Para qué se usa en la agencia</th></tr></thead>
+      <tbody>
+        <tr><td>HTML</td><td>Estructura de las páginas y formularios.</td></tr>
+        <tr><td>CSS</td><td>Colores, tipografía y diseño visual.</td></tr>
+        <tr><td>PHP</td><td>Lógica del servidor: login, altas y consultas.</td></tr>
+        <tr><td>MySQL</td><td>Guarda jugadores, clubes y contratos.</td></tr>
+        <tr><td>phpMyAdmin</td><td>Panel para administrar la base de datos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="html">
+  <h2>HTML</h2>
+  <p>HTML define el contenido de la página: títulos, textos, imágenes y formularios. Ejemplo de la ficha de un jugador:</p>
+<pre><code>&lt;article class="jugador"&gt;
+  &lt;img src="img/lucas.jpg" alt="Lucas Benítez"&gt;
+  &lt;h3&gt;Lucas Benítez&lt;/h3&gt;
+  &lt;p&gt;Delantero · Club Atlético Ejemplo&lt;/p&gt;
+&lt;/article&gt;</code></pre>
+</section>
+
+<section id="css">
+  <h2>CSS</h2>
+  <p>CSS define cómo se ve la página. Se puede escribir dentro del mismo archivo, en una etiqueta style, como en este informe. Se usan variables para los colores y una cuadrícula que acomoda las fichas de los jugadores según el ancho de la pantalla, así el sitio se ve bien en celular y en computadora.</p>
+<pre><code>:root { --acento: #4a6b5d; }
+
+.plantel {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.jugador { border: 1px solid #dcdedb; padding: 12px; }
+.jugador h3 { color: var(--acento); }</code></pre>
+</section>
+
+<section id="mysql">
+  <h2>MySQL</h2>
+  <p>MySQL guarda la información en tablas relacionadas entre sí. Para la agencia alcanzan tres: clubes, jugadores y contratos.</p>
+<pre><code>CREATE DATABASE agencia;
+USE agencia;
+
+CREATE TABLE clubes (
+  id_club INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  pais VARCHAR(60)
+);
+
+CREATE TABLE jugadores (
+  id_jugador INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(60) NOT NULL,
+  apellido VARCHAR(60) NOT NULL,
+  posicion VARCHAR(30),
+  valor_mercado DECIMAL(12,2),
+  id_club INT,
+  FOREIGN KEY (id_club) REFERENCES clubes(id_club)
+);
+
+CREATE TABLE contratos (
+  id_contrato INT AUTO_INCREMENT PRIMARY KEY,
+  id_jugador INT NOT NULL,
+  fecha_fin DATE NOT NULL,
+  clausula_rescision DECIMAL(12,2),
+  comision DECIMAL(4,2) DEFAULT 5.00,
+  FOREIGN KEY (id_jugador) REFERENCES jugadores(id_jugador)
+);
+
+CREATE TABLE usuarios (
+  id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(120) NOT NULL UNIQUE,
+  clave_hash VARCHAR(255) NOT NULL
+);</code></pre>
+  <p>La tabla <code>usuarios</code> guarda a los representantes que pueden entrar al panel. La contraseña nunca se guarda en texto plano, solo su hash.</p>
+
+  <img src="img/cGc" alt="MySQL">
+  
+  <section id="phpmyadmin">
+  <h2>phpMyAdmin</h2>
+  <p>phpMyAdmin es una aplicación web que permite administrar MySQL desde el navegador, sin usar comandos. Viene incluida en XAMPP y se abre en <code>http://localhost/phpmyadmin</code>. En el proyecto se usa para:</p>
+  <ul>
+    <li>Crear la base de datos y las tablas, o importar el archivo SQL.</li>
+    <li>Cargar jugadores de prueba y revisar los datos.</li>
+    <li>Hacer copias de seguridad de la base.</li>
+  </ul>
+
+  <img src="img/screen.jpg" alt="PhpMyAdmin">
+
+<section id="php">
+  <h2>PHP</h2>
+  <p>PHP corre en el servidor: se conecta a MySQL, lee los datos y arma la página que ve el usuario. Se recomienda usar PDO, que permite consultas seguras.</p>
+<pre><code>&lt;?php
+$pdo = new PDO("mysql:host=localhost;dbname=agencia;charset=utf8mb4", "root", "");
+
+$jugadores = $pdo-&gt;query("SELECT nombre, apellido, posicion FROM jugadores")
+-&gt;fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($jugadores as $j) {
+    echo "&lt;p&gt;" . htmlspecialchars($j['nombre'] . " " . $j['apellido']) . "&lt;/p&gt;";
+}</code></pre>
+  <p>Para el panel privado se usa <code>session_start()</code> para el inicio de sesión, y las contraseñas se guardan con <code>password_hash()</code>.</p>
+</section>
+
+<section id="login">
+  <h2>Sistema de login</h2>
+  <p>Un sistema de login (inicio de sesión) controla quién puede entrar a la parte privada del sitio. En la agencia, solo los representantes registrados pueden ver y modificar los datos de jugadores y contratos; el público general ve únicamente la parte pública.</p>
+
+  <h3>Cómo funciona</h3>
+  <ul>
+    <li>El usuario escribe su correo y su contraseña en un formulario HTML.</li>
+    <li>PHP busca ese correo en la tabla <code>usuarios</code> de MySQL.</li>
+    <li>Compara la contraseña ingresada con el hash guardado, usando <code>password_verify()</code>.</li>
+    <li>Si coincide, guarda al usuario en la sesión (<code>$_SESSION</code>) y lo deja pasar al panel.</li>
+    <li>Cada página privada revisa la sesión al comienzo; si no hay sesión iniciada, redirige al login.</li>
+    <li>Al cerrar sesión, se destruye la sesión con <code>session_destroy()</code>.</li>
+  </ul>
+
+  <h3>Ejemplo de verificación</h3>
+<pre><code>&lt;?php
+session_start();
+
+// ... se busca al usuario por su email en la base ...
+
+if ($usuario &amp;&amp; password_verify($_POST['clave'], $usuario['clave_hash'])) {
+    $_SESSION['id_usuario'] = $usuario['id_usuario'];
+    header('Location: panel.php');
+} else {
+    echo 'Correo o contraseña incorrectos.';
+}</code></pre>
+
+  <p>Para proteger una página privada alcanza con poner esto al principio:</p>
+<pre><code>&lt;?php
+session_start();
+if (!isset($_SESSION['id_usuario'])) {
+    header('Location: login.php');
+    exit;
+}</code></pre>
+
+  <img src="img/aW4yLnBuZw" alt="Log In">
+
+<section id="crud">
+  <h2>CRUD</h2>
+  <p>CRUD son las siglas de las cuatro operaciones básicas que se hacen sobre los datos: <strong>C</strong>reate (crear), <strong>R</strong>ead (leer), <strong>U</strong>pdate (actualizar) y <strong>D</strong>elete (eliminar). Es la base de casi cualquier sistema que maneja información. En la agencia, el CRUD se aplica a los jugadores, y de la misma forma a los clubes y a los contratos.</p>
+
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Operación</th><th>Consulta SQL</th><th>Qué hace en la agencia</th></tr></thead>
+      <tbody>
+        <tr><td>Crear</td><td><code>INSERT</code></td><td>Dar de alta un jugador nuevo.</td></tr>
+        <tr><td>Leer</td><td><code>SELECT</code></td><td>Ver el listado o la ficha de un jugador.</td></tr>
+        <tr><td>Actualizar</td><td><code>UPDATE</code></td><td>Cambiar el club o el valor de mercado.</td></tr>
+        <tr><td>Eliminar</td><td><code>DELETE</code></td><td>Borrar un jugador que ya no se representa.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Ejemplos con PHP y MySQL</h3>
+  <p>Las cuatro operaciones usan consultas preparadas, que evitan la inyección SQL:</p>
+<pre><code>// Crear
+$stmt = $pdo-&gt;prepare("INSERT INTO jugadores (nombre, apellido, posicion) VALUES (?, ?, ?)");
+$stmt-&gt;execute([$nombre, $apellido, $posicion]);
+
+// Leer
+$jugadores = $pdo-&gt;query("SELECT * FROM jugadores")-&gt;fetchAll();
+
+// Actualizar
+$stmt = $pdo-&gt;prepare("UPDATE jugadores SET valor_mercado = ? WHERE id_jugador = ?");
+$stmt-&gt;execute([$valor, $id]);
+
+// Eliminar
+$stmt = $pdo-&gt;prepare("DELETE FROM jugadores WHERE id_jugador = ?");
+$stmt-&gt;execute([$id]);</code></pre>
+
+  <p>En el panel, cada operación tiene su pantalla: un formulario para crear, una tabla con botones <em>Editar</em> y <em>Eliminar</em> para leer y modificar. Solo se puede llegar a ellas con una sesión iniciada, por lo que login y CRUD trabajan juntos.</p>
+
+  <img src="img/LzAyL2NydWQucG5n" alt="Crud">
+
+<footer>
+  Informe - Agencia de representación de jugadores - De Moliner - Base de datos/Programacion
+</footer>
+
+</div>
+</body>
+</html>
